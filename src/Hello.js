@@ -1,26 +1,28 @@
 import React from 'react';
 
-{
-  /* 2) 비구조화 할당(구조분해)를 통해 좀 더 간결하게 작성이 가능하다. */
-}
-function Hello({ color, name }) {
-  return <div style={{ color }}>안녕하세요 {name}</div>;
-}
-
-Hello.defaultProps = {
-  name: '이름없음', // 3) defaultProps로 기본값 설정할 수 있다.
-};
-
-{
-  /*
-function Hello(props) {
+function Hello({ color, name, isSpecial }) {
   return (
     <>
-      <div style={{ color: props.color }}>안녕하세요 {props.name}</div>
+      <div style={{ color }}>
+        {isSpecial ? <b>*</b> : null} {/*삼항 연산자를 통해 true일 경우 *을 표시한다. */}
+        안녕하세요 {name}
+      </div>
+
+      <div style={{ color }}>
+        {/* 
+          단축 평가 논리 계산법, 
+          isSpecial이 false이면 false 
+          true이면 <b>*</b> 이다.
+        */}
+        {isSpecial && <b>*</b>}
+        안녕하세요 {name}
+      </div>
     </>
   );
 }
-*/
-}
+
+Hello.defaultProps = {
+  name: '이름없음',
+};
 
 export default Hello;
