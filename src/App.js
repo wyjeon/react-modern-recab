@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import UserList from './UserList';
+import CreateUser from './CreateUser';
 /*
   useRef의 또다른 용도는 컴포넌트 안에서 
   조회 및 수정할 수 있는 변수를 관리하는 것이다.
@@ -10,7 +11,25 @@ import UserList from './UserList';
   위와 같은 값을 관리한다.
 */
 function App() {
-  const users = [
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: '',
+  });
+
+  const { username, email } = inputs;
+
+  const onChange = e => {
+    const { name, value } = e.target;
+
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  // users도 useState를 사용하여 컴포넌트 상태로 관리한다.
+  // const users = [
+  const [users, setUsers] = useState([
     {
       id: 1,
       username: 'velopert',
@@ -26,7 +45,7 @@ function App() {
       username: 'liz',
       email: 'liz@example.com',
     },
-  ];
+  ]);
 
   /*
     App 컴포넌트에서 배열에 새 항목을 추가하여
@@ -38,15 +57,32 @@ function App() {
   const nextId = useRef(4);
 
   const onCreate = () => {
-    // 나중에 구현 할 배열에 항목 추가하는 로직
-    // ...
+    const user = {
+      id: nextId.current,
+      username,
+      email,
+    };
+
+    /*
+      배열은 객체와 마찬가지로 불변성을 지켜야한다.
+      배열의 push, splice, sort 등의 함수를 사용하면 안된다.
+      ### 첫 번째 방법으로 spread 연산자를 사용한다. ###
+    */
+    setUsers([...users, user]);
+
+    // ### 두 번째 방법으로 concat 함수를 사용한다.
+    // setUsers(users.concat(user));
+
+    setInputs({
+      username: '',
+      email: '',
+    });
 
     nextId.current += 1;
   };
-
   return (
     <>
-      <CreateUser />
+      <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
       <UserList users={users} />
     </>
   );
